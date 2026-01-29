@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game - Match the Cards</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 min-h-screen flex items-center justify-center p-4">
+    
+    <!-- Main Container -->
+    <div class="w-full max-w-5xl">
+        
+        <!-- Game Header -->
+        <header class="text-center mb-8 slide-in">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-3 tracking-tight drop-shadow-lg">
+                <i class="fas fa-brain mr-3"></i>
+                Memory Game
+            </h1>
+            <p class="text-white text-lg md:text-xl opacity-90">Find all the matching pairs!</p>
+        </header>
+
+        <!-- Game Stats Card -->
+        <div class="bg-white bg-opacity-95 backdrop-blur-sm rounded-2xl lg:rounded-3xl shadow-2xl p-6 md:p-8 mb-6 slide-in">
+            
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
+                
+                <!-- Moves Counter -->
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 md:p-5 text-white text-center transform hover:scale-105 transition-all duration-300">
+                    <i class="fas fa-hand-pointer text-2xl md:text-3xl mb-2"></i>
+                    <p class="text-sm md:text-base opacity-90 font-medium">Moves</p>
+                    <p class="text-3xl md:text-4xl font-bold" id="moves">0</p>
+                </div>
+
+                <!-- Matches Counter -->
+                <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-4 md:p-5 text-white text-center transform hover:scale-105 transition-all duration-300">
+                    <i class="fas fa-check-double text-2xl md:text-3xl mb-2"></i>
+                    <p class="text-sm md:text-base opacity-90 font-medium">Matches</p>
+                    <p class="text-3xl md:text-4xl font-bold" id="matches">0</p>
+                </div>
+
+                <!-- Time Counter -->
+                <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 md:p-5 text-white text-center transform hover:scale-105 transition-all duration-300">
+                    <i class="fas fa-clock text-2xl md:text-3xl mb-2"></i>
+                    <p class="text-sm md:text-base opacity-90 font-medium">Time</p>
+                    <p class="text-3xl md:text-4xl font-bold" id="time">0:00</p>
+                </div>
+
+                <!-- Best Score -->
+                <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 md:p-5 text-white text-center transform hover:scale-105 transition-all duration-300">
+                    <i class="fas fa-trophy text-2xl md:text-3xl mb-2"></i>
+                    <p class="text-sm md:text-base opacity-90 font-medium">Best</p>
+                    <p class="text-3xl md:text-4xl font-bold" id="bestScore">--</p>
+                </div>
+                
+            </div>
+
+            <!-- Restart Button -->
+            <button 
+                id="restartBtn" 
+                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-8 rounded-xl text-lg md:text-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-3"
+            >
+                <i class="fas fa-redo text-xl"></i>
+                Restart Game
+            </button>
+            
+        </div>
+
+        <!-- Game Board -->
+        <div class="bg-white bg-opacity-95 backdrop-blur-sm rounded-2xl lg:rounded-3xl shadow-2xl p-4 md:p-6 lg:p-8 slide-in">
+            
+            <!-- Cards Grid - Reduced max width for better card visibility -->
+            <div class="max-w-2xl mx-auto">
+                <div id="gameBoard" class="grid grid-cols-4 gap-2 md:gap-3 lg:gap-4">
+                    <!-- Cards will be dynamically generated here by JavaScript -->
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <!-- Victory Modal (Hidden by default) -->
+    <div id="victoryModal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-md w-full text-center transform scale-0 transition-transform duration-500" id="modalContent">
+            
+            <!-- Trophy Icon -->
+            <div class="mb-6">
+                <i class="fas fa-trophy text-8xl text-yellow-500 animate-bounce"></i>
+            </div>
+
+            <!-- Victory Message -->
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                🎉 Congratulations! 🎉
+            </h2>
+            <p class="text-xl text-gray-600 mb-8">
+                You found all the pairs!
+            </p>
+
+            <!-- Stats Summary -->
+            <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-6 mb-8">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-600 text-sm mb-1">Moves</p>
+                        <p class="text-3xl font-bold text-purple-600" id="finalMoves">0</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-sm mb-1">Time</p>
+                        <p class="text-3xl font-bold text-pink-600" id="finalTime">0:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Play Again Button -->
+            <button 
+                id="playAgainBtn"
+                class="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-4 px-8 rounded-xl text-xl font-bold hover:from-green-600 hover:to-teal-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+                <i class="fas fa-play mr-2"></i>
+                Play Again
+            </button>
+            
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    
+</body>
+</html>

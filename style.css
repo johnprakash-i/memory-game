@@ -1,0 +1,348 @@
+/* ========================================
+   MEMORY GAME - CUSTOM STYLES
+======================================== */
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes flip {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(180deg);
+    }
+}
+
+@keyframes flipBack {
+    0% {
+        transform: rotateY(180deg);
+    }
+    100% {
+        transform: rotateY(0deg);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes match {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes symbolReveal {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes matchedPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 3px #10b981, 
+                    0 0 20px rgba(16, 185, 129, 0.4),
+                    0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 0 3px #10b981, 
+                    0 0 30px rgba(16, 185, 129, 0.8),
+                    0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* ========================================
+   CARD STYLES
+======================================== */
+
+.memory-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.memory-card:hover:not(.flipped):not(.matched) {
+    transform: scale(1.02);
+}
+
+.memory-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.memory-card.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+.memory-card.matched {
+    animation: match 0.6s ease-in-out;
+    pointer-events: none;
+}
+
+/* Card Face Styling */
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card-back {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+.card-front {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+/* Card Back Pattern */
+.card-back::before {
+    content: '?';
+    font-size: 3rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Card Icons */
+.card-icon {
+    font-size: 2.5rem;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   MATCHED CARDS STYLING
+======================================== */
+
+/* For matched cards - hide the ? and show symbol on back */
+.memory-card.matched .card-back {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px #10b981, 
+                0 0 20px rgba(16, 185, 129, 0.4),
+                0 6px 12px rgba(0, 0, 0, 0.2);
+    animation: matchedPulse 2s ease-in-out infinite;
+}
+
+/* Replace ? with symbol when matched */
+.memory-card.matched .card-back::before {
+    content: '' !important;
+}
+
+/* Show the correct symbol on the card back when matched */
+.memory-card.matched .card-back .matched-symbol {
+    display: block !important;
+    animation: symbolReveal 0.6s ease-out forwards;
+}
+
+/* Hide the symbol by default */
+.matched-symbol {
+    display: none;
+    font-size: 2.5rem;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* For matched cards - also update the front */
+.memory-card.matched .card-front {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    border: 3px solid #fff;
+}
+
+/* ========================================
+   MODAL ANIMATIONS
+======================================== */
+
+.modal-show {
+    display: flex !important;
+}
+
+.modal-show #modalContent {
+    transform: scale(1);
+}
+
+/* ========================================
+   RESPONSIVE CARD SIZES
+======================================== */
+
+@media (max-width: 640px) {
+    .card-back::before {
+        font-size: 2rem;
+    }
+    
+    .card-icon {
+        font-size: 1.5rem;
+    }
+    
+    .matched-symbol {
+        font-size: 1.8rem;
+    }
+    
+    .memory-card.matched .card-back,
+    .memory-card.matched .card-front {
+        border-width: 2px;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .card-back::before {
+        font-size: 2.5rem;
+    }
+    
+    .card-icon {
+        font-size: 2rem;
+    }
+    
+    .matched-symbol {
+        font-size: 2.2rem;
+    }
+    
+    .memory-card.matched .card-back,
+    .memory-card.matched .card-front {
+        border-width: 2.5px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .card-back::before {
+        font-size: 3.5rem;
+    }
+    
+    .card-icon {
+        font-size: 3rem;
+    }
+    
+    .matched-symbol {
+        font-size: 3rem;
+    }
+    
+    .memory-card.matched .card-back,
+    .memory-card.matched .card-front {
+        border-width: 3px;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+======================================== */
+
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Smooth transitions for all elements */
+* {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   GAME BOARD HOVER EFFECT
+======================================== */
+
+#gameBoard {
+    perspective: 1000px;
+}
+
+/* ========================================
+   LOADING STATE
+======================================== */
+
+.loading {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* ========================================
+   STATS ANIMATION
+======================================== */
+
+.stat-update {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+======================================== */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
